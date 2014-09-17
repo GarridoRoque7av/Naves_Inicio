@@ -1,1 +1,0 @@
-“Listo Maestro. [Roque Garrido]”
