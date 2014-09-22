@@ -1,1 +1,1 @@
-“Listo Maestro. [Roque Garrido]”Actividad 1: 10 Bien.
+“Listo Maestro. [Roque Garrido]”Actividad 1: 10 Bien.Actividad 2: 10 Muy bien.
