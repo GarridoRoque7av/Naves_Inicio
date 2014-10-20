@@ -4,7 +4,6 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "config.h"
-#include "sprite.h"
 
 CGame::CGame(){
 	estado = Estado::ESTADO_INICIANDO;
@@ -25,7 +24,7 @@ void CGame::Iniciando(){
 	}
 
 	SDL_WM_SetCaption("Mi primer juego", NULL);
-	nave= new Nave(screen,"../Data/minave.bmp");
+	nave= new Nave(screen, "../Data/minave.bmp");
 	//nave->CargarImagen("../Data/minave.bmp");
 }
 
@@ -36,54 +35,65 @@ void CGame::Finalize(){
 
 bool CGame::Start()
 {
-	// Esta variable nos ayudara a controlar la salida del juego...
+	
 	int salirJuego = false;
-          
+	int opc = 1;
+
 	while (salirJuego == false){
             
 		//Maquina de estados
 		switch(estado){
 		case Estado::ESTADO_INICIANDO:
-				Iniciando();
+				//Iniciando();
+			
+				printf("\n1. ESTADO_INICIANDO");
+			
 				estado= ESTADO_MENU;
-			break; 
+				break;
 		case Estado::ESTADO_MENU:	//MENU	
-			SDL_FillRect(screen, NULL, 0XFF000000);
+				printf("\n2. ESTADO_MENU");
 
-			keys = SDL_GetKeyState(NULL);
-				if(keys[SDLK_RIGHT])
-				{
-					nave->Mover(1);
-				}
-					keys = SDL_GetKeyState(NULL);
-				if(keys[SDLK_LEFT])
-				{
-					nave->Moverl(1);
-				}
-
-				nave-> Pintar();
-
-			//nave->PintarModulo(0,0,0,64,64);
-			//nave->PintarModulo(0,0,0);
-
-			break;
-		case Estado::ESTADO_JUGANDO: //JUGANDO	
-			break;
+				if(opc == 1)
+					estado= ESTADO_JUGANDO;
+				else
+					estado= ESTADO_FINALIZANDO;
+				
+				break;
+		case Estado::ESTADO_JUGANDO: //JUGANDO
+				
+			
+				printf("\n3. ESTADO_JUGANDO");
+				estado= ESTADO_TERMINANDO;
+				
+				break;
 		case Estado::ESTADO_TERMINANDO: //TERMINADO
-			break;
+			
+				printf("\n4. ESTADO_TERMINADO");
+				opc =1;
+				estado=ESTADO_MENU;
+				
+				break;
 		case Estado::ESTADO_FINALIZANDO: //SALIR
+				
+				printf("\n5. ESTADO_FINALIZADO");
+				getchar();
+				opc =2;
 				salirJuego = true;
 			break;
+		}
+	
+		while(SDL_PollEvent(&event))
+		{
+			if(event.type == SDL_QUIT){salirJuego=true;}
+			if(event.type == SDL_KEYDOWN) { }
+
 		};
 
-		while (SDL_PollEvent(&event))// aqui sdl creara una lista de eventos 
-		{
-			if(event.type== SDL_QUIT){salirJuego=true;}//si se detecta una 
-			if(event.type== SDL_KEYDOWN){}
-			}
-
 		//Este codigo esta provicionalmente aqui
-		SDL_Flip(screen);
+		//SDL_Flip(screen);
+
     }
+
 	return true;
+
 }
