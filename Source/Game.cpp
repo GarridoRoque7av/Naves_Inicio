@@ -3,41 +3,32 @@
 #include "Game.h"
 #include <SDL.h>
 #include <SDL_image.h>
-#include "Config.h"
-
-
-
+#include "config.h"
+#include "sprite.h"
 
 CGame::CGame(){
 	estado = Estado::ESTADO_INICIANDO;
 	atexit(SDL_Quit);
-
-}
-void CGame::Iniciando()
-{
-
-	if (SDL_Init( SDL_INIT_VIDEO )<0){
-
-printf("Error %s ", SDL_GetError());
-
-exit(EXIT_FAILURE);
-
-
 }
 
-screen = SDL_SetVideoMode( WIDTH_SCREEN, HEIGHT_SCREEN, 24, SDL_SWSURFACE );
-if (screen == NULL){
+void CGame::Iniciando(){
+	if(SDL_Init(SDL_INIT_VIDEO)<0){
+		printf("error %s", SDL_GetError());
+		exit(EXIT_FAILURE);
+	}
 
-printf("Error %s ", SDL_GetError());
+	screen = SDL_SetVideoMode(WIDTH_SCREEN,HEIGHT_SCREEN,24,SDL_SWSURFACE);
 
-exit(EXIT_FAILURE);
+	if(screen == NULL){	
+		printf("error %s", SDL_GetError());
+		exit(EXIT_FAILURE);
+	}
 
+	SDL_WM_SetCaption("Mi primer juego", NULL);
+	nave= new Nave(screen,"../Data/minave.bmp");
+	//nave->CargarImagen("../Data/minave.bmp");
 }
 
-SDL_WM_SetCaption( "Mi primer Juego", NULL );
-
-
-}
 // Con esta función eliminaremos todos los elementos en pantalla
 void CGame::Finalize(){
 	SDL_Quit();
@@ -47,54 +38,52 @@ bool CGame::Start()
 {
 	// Esta variable nos ayudara a controlar la salida del juego...
 	int salirJuego = false;
-
-
+          
 	while (salirJuego == false){
             
 		//Maquina de estados
 		switch(estado){
-			case Estado::ESTADO_INICIANDO: //INICIALIZAR
-			//	CGame::Iniciando();
-					Iniciando();
+		case Estado::ESTADO_INICIANDO:
+				Iniciando();
+				estado= ESTADO_MENU;
+			break; 
+		case Estado::ESTADO_MENU:	//MENU	
+			SDL_FillRect(screen, NULL, 0XFF000000);
+
+			keys = SDL_GetKeyState(NULL);
+				if(keys[SDLK_RIGHT])
 				{
-
-			//	nave= SDL_LoadBMP("../Data/Minave.bmp");	
-				nave = IMG_LoadJPG_RW(SDL_RWFromFile("../Data/cuadro.jpg","rb"));
-				SDL_Rect fuente;
-				fuente.x = 90;
-				fuente.y = 152;
-				fuente.w = 242;
-				fuente.h = 76;
-				SDL_Rect destino;
-				destino.x =100;
-				destino.y =100;
-				destino.w =100;
-				destino.h =100;
-				SDL_BlitSurface(nave, &fuente, screen, &destino);
-				SDL_FreeSurface(nave);
-
-
-
+					nave->Mover(1);
+				}
+					keys = SDL_GetKeyState(NULL);
+				if(keys[SDLK_LEFT])
+				{
+					nave->Moverl(1);
 				}
 
-			break;
-			case Estado::ESTADO_MENU: //MENU
-			break;
-			case Estado::ESTADO_JUGANDO:	//JUGAR	
-			break;	
-			case Estado::ESTADO_TERMINANDO: //SALIR
-		
-			break;
-		    case Estado::ESTADO_FINALIZANDO:	//FINALIZAR	
-						salirJuego = true;
-			break;
+				nave-> Pintar();
 
+			//nave->PintarModulo(0,0,0,64,64);
+			//nave->PintarModulo(0,0,0);
+
+			break;
+		case Estado::ESTADO_JUGANDO: //JUGANDO	
+			break;
+		case Estado::ESTADO_TERMINANDO: //TERMINADO
+			break;
+		case Estado::ESTADO_FINALIZANDO: //SALIR
+				salirJuego = true;
+			break;
 		};
-		//Este codigo estara provicionalmente aqui.
 
-SDL_Flip(screen);
-		
+		while (SDL_PollEvent(&event))// aqui sdl creara una lista de eventos 
+		{
+			if(event.type== SDL_QUIT){salirJuego=true;}//si se detecta una 
+			if(event.type== SDL_KEYDOWN){}
+			}
 
+		//Este codigo esta provicionalmente aqui
+		SDL_Flip(screen);
     }
 	return true;
 }
