@@ -6,6 +6,8 @@
 class Nave{
 	int  x;
 	int  y;
+	int  w;
+	int  h;
 
 	Sprite * sprite;
 	
@@ -18,6 +20,12 @@ public:
 
 	 void Mover(int posisicon);
 	 void Moverl(int posicion);
+	 int obtenerX();
+	 int obtenerY();
+	 int obtenerW();
+	 int obtenerH();
+	 void Movera(int posicion);
+	 void Moverab(int posicion);
 
 };
 

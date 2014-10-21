@@ -44,41 +44,64 @@ bool CGame::Start()
 		//Maquina de estados
 		switch(estado){
 		case Estado::ESTADO_INICIANDO:
-				//Iniciando();
+				Iniciando();
 			
-				printf("\n1. ESTADO_INICIANDO");
+			//printf("\n1. ESTADO_INICIANDO");
 			
-				estado= ESTADO_MENU;
+			estado= ESTADO_MENU;
 				break;
-		case Estado::ESTADO_MENU:	//MENU	
-				printf("\n2. ESTADO_MENU");
+	case Estado::ESTADO_MENU:	//MENU
+		SDL_FillRect(screen, NULL,0x000000);
+				keys=SDL_GetKeyState(NULL);
+					
+				if(keys[SDLK_RIGHT]&& !esLimitePantalla(nave,BORDE_DERECHO)){
+
+					nave->Mover(1);
+				};
+
+				if(keys[SDLK_LEFT]&& !esLimitePantalla(nave,BORDE_IZQUIERDO)){
+					nave->Moverl(1);
+				};
+
+				if(keys[SDLK_UP]&& !esLimitePantalla(nave,BORDE_SUPERIOR)){
+					nave->Movera(1);
+
+					
+				};
+				if(keys[SDLK_DOWN]&& !esLimitePantalla(nave,BORDE_INFERIOR)){
+					nave->Moverab(1);
+				};
+
+				nave->Pintar();
+
+			/*	printf("\n2. ESTADO_MENU");
 
 				if(opc == 1)
 					estado= ESTADO_JUGANDO;
 				else
-					estado= ESTADO_FINALIZANDO;
+					estado= ESTADO_FINALIZANDO;*/
 				
 				break;
 		case Estado::ESTADO_JUGANDO: //JUGANDO
 				
-			
+			/*
 				printf("\n3. ESTADO_JUGANDO");
-				estado= ESTADO_TERMINANDO;
+				estado= ESTADO_TERMINANDO;*/
 				
 				break;
 		case Estado::ESTADO_TERMINANDO: //TERMINADO
 			
-				printf("\n4. ESTADO_TERMINADO");
-				opc =1;
-				estado=ESTADO_MENU;
+		/*		printf("\n4. ESTADO_TERMINADO");
+				opc =2;
+				estado=ESTADO_MENU;*/
 				
 				break;
 		case Estado::ESTADO_FINALIZANDO: //SALIR
 				
-				printf("\n5. ESTADO_FINALIZADO");
+				/*printf("\n5. ESTADO_FINALIZADO");
 				getchar();
-				opc =2;
-				salirJuego = true;
+				opc =1;
+				salirJuego = true;*/
 			break;
 		}
 	
@@ -90,10 +113,30 @@ bool CGame::Start()
 		};
 
 		//Este codigo esta provicionalmente aqui
-		//SDL_Flip(screen);
+		SDL_Flip(screen);
 
     }
 
 	return true;
+
+}
+
+bool CGame::esLimitePantalla(Nave*objeto, int bandera)
+{
+	if (bandera & BORDE_IZQUIERDO)
+	if(objeto->obtenerX() <=0)
+		return true;
+		if (bandera & BORDE_SUPERIOR)
+	if(objeto ->obtenerY() <=0)
+		return true;
+				if (bandera & BORDE_DERECHO)
+	if (objeto->obtenerX()>=(WIDTH_SCREEN-objeto->obtenerW()))
+		return true;
+				if (bandera & BORDE_INFERIOR)
+	if(objeto ->obtenerY()>=(HEIGHT_SCREEN-objeto->obtenerH()))
+		return true;
+	return false;
+
+
 
 }

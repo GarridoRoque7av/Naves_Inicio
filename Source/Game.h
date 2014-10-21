@@ -2,6 +2,9 @@
 #include <SDL_image.h>
 #include "Nave.h"
 
+
+
+
 class CGame
 {
 public:
@@ -23,7 +26,7 @@ public:
 
 private:
 	void Iniciando();
-	
+	bool esLimitePantalla(Nave*objeto, int bandera);
 	
 Uint8*keys;
 SDL_Event event;
