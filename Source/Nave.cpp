@@ -3,15 +3,22 @@
 
 
 
-Nave::Nave(SDL_Surface* screen, char * rutaImagen){
+Nave::Nave(SDL_Surface* screen, char * rutaImagen,  int x, int y){
+
 
 	sprite = new Sprite(screen);
 	sprite->CargarImagen(rutaImagen);
 	w= sprite->WidthModule(0);
 	h=sprite->HeightModule(0);
-	x=(WIDTH_SCREEN/2)-(w/2);
-	y=(HEIGHT_SCREEN-80)-(h);
+	this ->x=x;
+	this ->y=y;
+	stepsActual=0;
+	posisiconBrinco=0;
+	posicionaActual=0;
 
+
+	//
+//	
 
 }
 
@@ -59,3 +66,71 @@ int Nave::obtenerW(){ return w;}
 
 int Nave::obtenerH(){ return h;}
 
+
+void Nave::ponerEn(int x, int y){
+
+
+
+	this->x=x;
+	this->y=y;
+}
+
+void Nave::Mover(int brinco, int puntoFinal){
+		if(posisiconBrinco<=0){
+	posisiconBrinco=brinco;
+	posicionFinal=puntoFinal;
+		}
+
+}
+
+void Nave::Actualizar(){
+	if(posisiconBrinco!=0){
+		
+		if(posicionaActual<=posicionFinal){
+			Mover(posisiconBrinco);
+			posicionaActual++;
+		}
+		
+		else{
+			posisiconBrinco=0;
+			posicionaActual=0;
+			posicionFinal=0;
+			IncrementarStep();
+		}
+
+	}
+
+}
+
+void Nave::SetStep(int stepsFinal){
+
+
+
+	this->stepsFinal=stepsFinal;
+
+
+}
+void Nave:: IncrementarStep(){ 
+	stepsActual++;
+	if(stepsActual>=stepsFinal)
+		stepsActual=0;
+}
+int Nave::ObtenerStepActual(){ 
+	
+	
+	return stepsActual;
+
+
+}
+bool Nave::IsRunningAnimacion(){
+
+
+
+	if( posisiconBrinco==0)
+		return false;
+	else 
+		return true;
+
+
+
+}

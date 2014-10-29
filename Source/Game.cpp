@@ -14,6 +14,7 @@ void CGame::Iniciando(){
 	if(SDL_Init(SDL_INIT_VIDEO)<0){
 		printf("error %s", SDL_GetError());
 		exit(EXIT_FAILURE);
+
 	}
 
 	screen = SDL_SetVideoMode(WIDTH_SCREEN,HEIGHT_SCREEN,24,SDL_SWSURFACE);
@@ -24,8 +25,13 @@ void CGame::Iniciando(){
 	}
 
 	SDL_WM_SetCaption("Mi primer juego", NULL);
-	nave= new Nave(screen, "../Data/minave.bmp");
+	nave= new Nave(screen, "../Data/nave.jpg",(WIDTH_SCREEN/2)/*-(w/2)*/,(HEIGHT_SCREEN-80)/*-(h)*/);
+
 	//nave->CargarImagen("../Data/minave.bmp");
+	enemigo = new Nave (screen,"../Data/enemigo.bmp",0,0);
+	//emigoParabola=-10.0f;
+	enemigo->SetStep(4);
+
 }
 
 // Con esta función eliminaremos todos los elementos en pantalla
@@ -53,7 +59,8 @@ bool CGame::Start()
 	case Estado::ESTADO_MENU:	//MENU
 		SDL_FillRect(screen, NULL,0x000000);
 				keys=SDL_GetKeyState(NULL);
-					
+				MoverEnemigo();
+				enemigo->Actualizar();
 				if(keys[SDLK_RIGHT]&& !esLimitePantalla(nave,BORDE_DERECHO)){
 
 					nave->Mover(1);
@@ -71,8 +78,9 @@ bool CGame::Start()
 				if(keys[SDLK_DOWN]&& !esLimitePantalla(nave,BORDE_INFERIOR)){
 					nave->Moverab(1);
 				};
-
-				nave->Pintar();
+						nave->Pintar();
+				enemigo -> Pintar();
+		
 
 			/*	printf("\n2. ESTADO_MENU");
 
@@ -137,6 +145,47 @@ bool CGame::esLimitePantalla(Nave*objeto, int bandera)
 		return true;
 	return false;
 
+
+
+}
+
+
+void CGame::MoverEnemigo(){
+
+// if (!esLimitePantalla(enemigo,BORDE_DERECHO))
+
+	switch(enemigo-> ObtenerStepActual()){
+	case 0:		
+
+			if(!enemigo->IsRunningAnimacion())
+				enemigo->Mover(1,WIDTH_SCREEN-enemigo->obtenerW());
+				//enemigo->IncrementarStep();
+			
+		break;
+
+	case 1:
+		enemigo->IncrementarStep();
+		break;
+	case 2:
+			if(!enemigo->IsRunningAnimacion())
+				enemigo->Mover(-1,WIDTH_SCREEN-enemigo->obtenerW());
+			//	enemigo->IncrementarStep();
+		
+	
+
+		break;
+
+	case 3:
+		enemigo->IncrementarStep();
+
+		break;
+
+
+
+	
+/*	enemigo->ponerEn(enemigoParabola,enemigoParabola*enemigoParabola);
+	enemigoParabola+=.001f;*/
+	}
 
 
 }

@@ -26,12 +26,16 @@ public:
 
 private:
 	void Iniciando();
+	void MoverEnemigo();
 	bool esLimitePantalla(Nave*objeto, int bandera);
 	
 Uint8*keys;
 SDL_Event event;
 SDL_Surface *screen;
 Nave  *nave;
+Nave *enemigo;
 
 	Estado estado;
+	float  enemigoParabola;
+
 };

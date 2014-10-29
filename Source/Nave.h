@@ -8,11 +8,17 @@ class Nave{
 	int  y;
 	int  w;
 	int  h;
+	int posicionaActual;
+	int posicionFinal;
+	int posisiconBrinco;
+	int stepsActual;
+	int stepsFinal;
+
 
 	Sprite * sprite;
 	
 public:
-	Nave(SDL_Surface* screen, char *rutaImagen);
+	Nave(SDL_Surface* screen, char *rutaImagen,int x, int y);
 	
 
 	~Nave();
@@ -26,6 +32,13 @@ public:
 	 int obtenerH();
 	 void Movera(int posicion);
 	 void Moverab(int posicion);
+	 void ponerEn(int x ,int y);
+	 void Mover( int brinco, int puntoFinal);
+	 void SetStep(int stepsFinal);
+	 void IncrementarStep();
+	 int ObtenerStepActual();
+	 bool  IsRunningAnimacion();
+	 void Actualizar();
 
 };
 
