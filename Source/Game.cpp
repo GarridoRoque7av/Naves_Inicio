@@ -25,12 +25,20 @@ void CGame::Iniciando(){
 	}
 
 	SDL_WM_SetCaption("Mi primer juego", NULL);
-	nave= new Nave(screen, "../Data/nave.jpg",(WIDTH_SCREEN/2)/*-(w/2)*/,(HEIGHT_SCREEN-80)/*-(h)*/);
+	nave= new Nave(screen, "../Data/image.jpg",(WIDTH_SCREEN/2)/*-(w/2)*/,(HEIGHT_SCREEN-80)/*-(h)*/);
 
 	//nave->CargarImagen("../Data/minave.bmp");
-	enemigo = new Nave (screen,"../Data/enemigo.bmp",0,0);
+	//enemigo = new Nave (screen,"../Data/enemigo.bmp",0,0);
+	enemigoArreglo = new Nave*[10];
+	for (int i = 0 ; i<10; i++)
+	enemigoArreglo[i]= new Nave(screen,"../Data/enemigo.bmp",i*65,0);
+
+
 	//emigoParabola=-10.0f;
-	enemigo->SetStep(4);
+	//enemigo->SetStep(4);
+	for ( int i=0; i<10; i++)
+
+		enemigoArreglo[i]-> SetStep(4);
 
 }
 
@@ -59,8 +67,10 @@ bool CGame::Start()
 	case Estado::ESTADO_MENU:	//MENU
 		SDL_FillRect(screen, NULL,0x000000);
 				keys=SDL_GetKeyState(NULL);
+				//enemigo->Actualizar();
+					for ( int i=0; i<10; i++)
+						enemigoArreglo[i]-> Actualizar();
 				MoverEnemigo();
-				enemigo->Actualizar();
 				if(keys[SDLK_RIGHT]&& !esLimitePantalla(nave,BORDE_DERECHO)){
 
 					nave->Mover(1);
@@ -79,8 +89,10 @@ bool CGame::Start()
 					nave->Moverab(1);
 				};
 						nave->Pintar();
-				enemigo -> Pintar();
-		
+						
+			//	enemigo -> Pintar();
+			for ( int i=0; i<10; i++)
+						enemigoArreglo[i]-> Pintar();
 
 			/*	printf("\n2. ESTADO_MENU");
 
@@ -152,31 +164,43 @@ bool CGame::esLimitePantalla(Nave*objeto, int bandera)
 
 void CGame::MoverEnemigo(){
 
-// if (!esLimitePantalla(enemigo,BORDE_DERECHO))
 
-	switch(enemigo-> ObtenerStepActual()){
+
+	
+/*	enemigo->ponerEn(enemigoParabola,enemigoParabola*enemigoParabola);
+	enemigoParabola+=.001f;*/
+	
+	for ( int i = 0; i<10; i++)
+		switch(enemigoArreglo[i]-> ObtenerStepActual()){
 	case 0:		
+	
 
-			if(!enemigo->IsRunningAnimacion())
-				enemigo->Mover(1,WIDTH_SCREEN-enemigo->obtenerW());
+			if(!enemigoArreglo[i]->IsRunningAnimacion())
+				enemigoArreglo[i]->Mover(1,WIDTH_SCREEN-enemigoArreglo[i]->obtenerW());
 				//enemigo->IncrementarStep();
+				if (esLimitePantalla(enemigoArreglo[i],BORDE_DERECHO))
+			enemigoArreglo[i]->TerminarAnimacion();
+
 			
 		break;
 
 	case 1:
-		enemigo->IncrementarStep();
+		enemigoArreglo[i]->IncrementarStep();
 		break;
 	case 2:
-			if(!enemigo->IsRunningAnimacion())
-				enemigo->Mover(-1,WIDTH_SCREEN-enemigo->obtenerW());
-			//	enemigo->IncrementarStep();
 		
+
+			if(!enemigoArreglo[i]->IsRunningAnimacion())
+				enemigoArreglo[i]->Mover(-1,WIDTH_SCREEN-enemigoArreglo[i]->obtenerW());
+			//	enemigoArreglo[i]->IncrementarStep();
+		if (esLimitePantalla(enemigoArreglo[i],BORDE_IZQUIERDO))
+			enemigoArreglo[i]->TerminarAnimacion();
 	
 
 		break;
 
 	case 3:
-		enemigo->IncrementarStep();
+		enemigoArreglo[i]->IncrementarStep();
 
 		break;
 
@@ -186,6 +210,7 @@ void CGame::MoverEnemigo(){
 /*	enemigo->ponerEn(enemigoParabola,enemigoParabola*enemigoParabola);
 	enemigoParabola+=.001f;*/
 	}
+
 
 
 }

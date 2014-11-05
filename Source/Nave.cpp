@@ -92,10 +92,8 @@ void Nave::Actualizar(){
 		}
 		
 		else{
-			posisiconBrinco=0;
-			posicionaActual=0;
-			posicionFinal=0;
-			IncrementarStep();
+			TerminarAnimacion();
+
 		}
 
 	}
@@ -132,5 +130,14 @@ bool Nave::IsRunningAnimacion(){
 		return true;
 
 
+
+}
+
+void Nave::TerminarAnimacion(){
+
+		    posisiconBrinco=0;
+			posicionaActual=0;
+			posicionFinal=0;
+			IncrementarStep();
 
 }

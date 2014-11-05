@@ -38,6 +38,7 @@ public:
 	 void IncrementarStep();
 	 int ObtenerStepActual();
 	 bool  IsRunningAnimacion();
+	 void TerminarAnimacion();// Fuerza a aterminar la animacion de la nave el step
 	 void Actualizar();
 
 };
