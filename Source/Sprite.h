@@ -15,7 +15,7 @@ public:
 	void CargarImagen(char * ruta);
 	//void PintarModulo(int id, int x, int y, int w, int h);
 	void PintarModulo(int id, int x, int y);
-
+	void borrarFondo();
 	Sprite(SDL_Surface * screen);
 	~Sprite();
 	int WidthModule(int id);

@@ -4,9 +4,17 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "config.h"
+#include "sprite.h"
+#include "SDL.h"
+
 
 CGame::CGame(){
+	frames = 0;
+	tiempoFrameInicio=0;
 	estado = Estado::ESTADO_INICIANDO;
+	opcion =0;
+	estaSeleccionado=true;
+
 	atexit(SDL_Quit);
 }
 
@@ -17,7 +25,7 @@ void CGame::Iniciando(){
 
 	}
 
-	screen = SDL_SetVideoMode(WIDTH_SCREEN,HEIGHT_SCREEN,24,SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(WIDTH_SCREEN,HEIGHT_SCREEN,24,SDL_HWSURFACE | SDL_DOUBLEBUF);
 
 	if(screen == NULL){	
 		printf("error %s", SDL_GetError());
@@ -25,14 +33,24 @@ void CGame::Iniciando(){
 	}
 
 	SDL_WM_SetCaption("Mi primer juego", NULL);
-	nave= new Nave(screen, "../Data/image.jpg",(WIDTH_SCREEN/2)/*-(w/2)*/,(HEIGHT_SCREEN-80)/*-(h)*/);
+	nave= new Nave(screen, "../Data/minave.bmp",(WIDTH_SCREEN/2),(HEIGHT_SCREEN-80),0);
+	menu= new Nave(screen,"../Data/FondeMenu.bmp",0,0,1);	
+	textonombre= new Nave(screen,"../Data/texto.bmp",0,0,3);	
+	texnoinicio= new Nave(screen,"../Data/texto.bmp",250,120,4);
+	textosalir=new Nave(screen,"../Data/texto.bmp",260,160,5);
+	textoalumno=new Nave(screen,"../Data/texto.bmp",155,400,6);
+	tecxtoamarilloinicio= new Nave(screen,"../Data/texto.bmp",250,120,7);
+	textoamarillosalir=new Nave(screen,"../Data/texto.bmp",260,160,8);
+	fondojuego =new Nave(screen,"../Data/estrellas.bmp",0,0,1); 
+
+		
 
 	//nave->CargarImagen("../Data/minave.bmp");
 	//enemigo = new Nave (screen,"../Data/enemigo.bmp",0,0);
 	enemigoArreglo = new Nave*[10];
 	for (int i = 0 ; i<10; i++)
-	enemigoArreglo[i]= new Nave(screen,"../Data/enemigo.bmp",i*65,0);
-
+	enemigoArreglo[i]= new Nave(screen,"../Data/enemigo.bmp",i*65,0,2);
+		
 
 	//emigoParabola=-10.0f;
 	//enemigo->SetStep(4);
@@ -59,69 +77,101 @@ bool CGame::Start()
 		switch(estado){
 		case Estado::ESTADO_INICIANDO:
 				Iniciando();
-			
-			//printf("\n1. ESTADO_INICIANDO");
-			
-			estado= ESTADO_MENU;
+				estado= ESTADO_MENU;
+				
+
 				break;
 	case Estado::ESTADO_MENU:	//MENU
-		SDL_FillRect(screen, NULL,0x000000);
+		keys= SDL_GetKeyState(NULL);
+				menu->Pintar();
+				textonombre->Pintar();
+				if(estaSeleccionado)
+				{
+					tecxtoamarilloinicio -> Pintar();
+					textosalir ->Pintar();
+
+				}
+				else 
+				{
+					texnoinicio ->Pintar();
+					textoamarillosalir->Pintar();
+				}
+
+
+
+
+
+				textoalumno->Pintar();
+
+				if(keys[SDLK_UP]){
+
+					estaSeleccionado = true;
+					opcion = 0;
+				}
+
+				if(keys[SDLK_DOWN]){
+
+					estaSeleccionado = false;
+					opcion = 1;
+				}
+
+				if(keys[SDLK_RETURN]){
+
+					if(opcion ==0){
+						estado=ESTADO_JUGANDO;
+					
+					}
+					else 
+					{
+						salirJuego= true;
+
+
+					}
+
+				}
+
+
+
+				//estado= ESTADO_JUGANDO;
+				break;
+		case Estado::ESTADO_JUGANDO: //JUGANDO
+				SDL_FillRect(screen, NULL,0x000000);
+				fondojuego -> Pintar();
 				keys=SDL_GetKeyState(NULL);
-				//enemigo->Actualizar();
+			    
 					for ( int i=0; i<10; i++)
+					{
 						enemigoArreglo[i]-> Actualizar();
+						checkCollision(nave, enemigoArreglo[i]);
+					}
+
 				MoverEnemigo();
+				
 				if(keys[SDLK_RIGHT]&& !esLimitePantalla(nave,BORDE_DERECHO)){
 
-					nave->Mover(1);
+					nave->Mover(8);
 				};
 
 				if(keys[SDLK_LEFT]&& !esLimitePantalla(nave,BORDE_IZQUIERDO)){
-					nave->Moverl(1);
+					nave->Moverl(8);
 				};
 
 				if(keys[SDLK_UP]&& !esLimitePantalla(nave,BORDE_SUPERIOR)){
-					nave->Movera(1);
+					nave->Movera(8);
 
 					
 				};
 				if(keys[SDLK_DOWN]&& !esLimitePantalla(nave,BORDE_INFERIOR)){
-					nave->Moverab(1);
+					nave->Moverab(8);
 				};
 						nave->Pintar();
 						
-			//	enemigo -> Pintar();
 			for ( int i=0; i<10; i++)
 						enemigoArreglo[i]-> Pintar();
-
-			/*	printf("\n2. ESTADO_MENU");
-
-				if(opc == 1)
-					estado= ESTADO_JUGANDO;
-				else
-					estado= ESTADO_FINALIZANDO;*/
-				
 				break;
-		case Estado::ESTADO_JUGANDO: //JUGANDO
-				
-			/*
-				printf("\n3. ESTADO_JUGANDO");
-				estado= ESTADO_TERMINANDO;*/
-				
-				break;
-		case Estado::ESTADO_TERMINANDO: //TERMINADO
-			
-		/*		printf("\n4. ESTADO_TERMINADO");
-				opc =2;
-				estado=ESTADO_MENU;*/
-				
+		case Estado::ESTADO_TERMINANDO: //TERMINADO						
 				break;
 		case Estado::ESTADO_FINALIZANDO: //SALIR
-				
-				/*printf("\n5. ESTADO_FINALIZADO");
-				getchar();
-				opc =1;
-				salirJuego = true;*/
 			break;
 		}
 	
@@ -134,6 +184,15 @@ bool CGame::Start()
 
 		//Este codigo esta provicionalmente aqui
 		SDL_Flip(screen);
+		frames++;
+		tiempoFrameFinal=SDL_GetTicks();
+		while (tiempoFrameFinal < (tiempoFrameInicio + FPS_DELAY))
+			tiempoFrameFinal= SDL_GetTicks();
+		//printf("Frame:%d  Tiempo:%d TiempoPorFrame:%d FPS:%f\n", frames, tiempoFrameInicio,tiempoFrameFinal-tiempoFrameInicio, 1000.0f/ (float)(tiempoFrameFinal-tiempoFrameInicio));
+
+
+		tiempoFrameInicio = tiempoFrameFinal;
+
 
     }
 
@@ -159,6 +218,36 @@ bool CGame::esLimitePantalla(Nave*objeto, int bandera)
 
 
 
+}
+
+bool CGame::isPointInRect(int x, int y, Nave*enemigo)
+{
+	if(x>=enemigo->obtenerX() &&
+		y>=enemigo->obtenerY() &&
+		x<=enemigo->obtenerX()+enemigo->obtenerW() &&
+		y<=enemigo->obtenerY()+enemigo->obtenerH())
+	{
+			return true;
+	}
+			return false;
+}
+
+bool CGame::checkCollision(Nave*nave, Nave*enemigo)
+{
+	
+		if(isPointInRect(nave->obtenerX(),nave->obtenerY(),enemigo) == true ||
+			isPointInRect(nave->obtenerX()+nave->obtenerW(),nave->obtenerY(),enemigo) == true ||
+			isPointInRect(nave->obtenerX(),nave->obtenerY()+nave->obtenerH(),enemigo) == true ||
+			isPointInRect(nave->obtenerX()+nave->obtenerW(),nave->obtenerY()+nave->obtenerH(),enemigo) == true
+			)
+			{
+				printf("Collision detected\n");
+				nave->resetPosition();
+				nave->Pintar();
+				estado=ESTADO_MENU;
+				return true;
+			}
+		return false;
 }
 
 

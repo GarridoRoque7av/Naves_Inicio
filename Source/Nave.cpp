@@ -3,23 +3,19 @@
 
 
 
-Nave::Nave(SDL_Surface* screen, char * rutaImagen,  int x, int y){
+Nave::Nave(SDL_Surface* screen, char * rutaImagen,  int x, int y, int module){
 
-
+	moduleUsing=module;
 	sprite = new Sprite(screen);
 	sprite->CargarImagen(rutaImagen);
-	w= sprite->WidthModule(0);
-	h=sprite->HeightModule(0);
+	sprite->borrarFondo();
+	w =  sprite->WidthModule(moduleUsing);
+	h = sprite->HeightModule(moduleUsing);
 	this ->x=x;
 	this ->y=y;
 	stepsActual=0;
 	posisiconBrinco=0;
 	posicionaActual=0;
-
-
-	//
-//	
-
 }
 
 
@@ -31,8 +27,22 @@ Nave::~Nave()
 
 void Nave::Pintar()
 {
-	sprite->PintarModulo(0,x,y);
+	sprite->PintarModulo(moduleUsing,x,y);
 
+
+}
+
+void Nave::Pintar(int module, int x, int y )
+{
+	sprite->PintarModulo(module,x,y);
+
+
+}
+
+void Nave::resetPosition()
+{
+	x=(WIDTH_SCREEN/2);
+	y=(HEIGHT_SCREEN-80);
 }
 
 void Nave::Mover(int posicion){
@@ -134,10 +144,8 @@ bool Nave::IsRunningAnimacion(){
 }
 
 void Nave::TerminarAnimacion(){
-
-		    posisiconBrinco=0;
-			posicionaActual=0;
-			posicionFinal=0;
-			IncrementarStep();
-
+	posisiconBrinco=0;
+	posicionaActual=0;
+	posicionFinal=0;
+	IncrementarStep();
 }

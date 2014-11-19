@@ -9,5 +9,27 @@
 #define BORDE_SUPERIOR	  1<<1
 #define BORDE_DERECHO     1<<2
 #define BORDE_INFERIOR    1<<3
+#define FPS_LIMIT 30.0f
+#define FPS_DELAY 1000.0f/ FPS_LIMIT
+/******************  SPRITES **************/
+/*
 
+TIPO_NOMBRE(Archivo)_DESCRIPCION
+
+
+*/
+
+#define MODULO_MINAVE_NAVE
+#define MODULO_MENU_FONDO
+#define MODULO_ENEMIGO_NAVE
+#define MODULO_TEXTO_TITULO
+#define MODULO_TEXTO_NOMBRE
+#define MODULO_TEXTO_OPCION1
+#define MODULO_TEXTO_OPCION2
+#define MODULO_TEXTO_OPCION1_SELECCION
+#define MODULO_TEXTO_OPCION2_SELECCION
+
+
+
+/******************************************/
 #endif

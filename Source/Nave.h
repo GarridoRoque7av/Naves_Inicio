@@ -18,14 +18,16 @@ class Nave{
 	Sprite * sprite;
 	
 public:
-	Nave(SDL_Surface* screen, char *rutaImagen,int x, int y);
+	Nave(SDL_Surface* screen, char *rutaImagen,int x, int y, int module);
 	
 
 	~Nave();
 	 void Pintar();
+	 void Pintar( int module, int x, int y);
 
 	 void Mover(int posisicon);
 	 void Moverl(int posicion);
+	 int moduleUsing;
 	 int obtenerX();
 	 int obtenerY();
 	 int obtenerW();
@@ -40,6 +42,7 @@ public:
 	 bool  IsRunningAnimacion();
 	 void TerminarAnimacion();// Fuerza a aterminar la animacion de la nave el step
 	 void Actualizar();
+	void resetPosition();
 
 };
 

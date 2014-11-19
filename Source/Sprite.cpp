@@ -26,6 +26,11 @@ Sprite::~Sprite(){
 //};
 
 
+void Sprite::borrarFondo(){
+	//image=SDL_LoadBMP(ruta);
+	SDL_SetColorKey(image, SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(image->format,255,0,0));
+
+}
 
 void  Sprite::PintarModulo(int id, int x ,int y){
 		SDL_Rect src;
